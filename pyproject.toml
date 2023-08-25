@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "base-airflow"
+version = "0.1.0"
+description = "An airflow package with basic airflow directory structure"
+authors = ["mdrmuhaimin <rumman1988@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.9.16"
+airflowctl = "^0.2.6"
+coverage = "^7.3.0"
+pytest = "^7.4.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "23.7.0"
+flake8 = "6.1.0"
+mypy = "1.5.1"
+pre-commit = "3.3.3"
+isort = "5.12.0"
+detect-secrets = "1.4.0"
+poethepoet = "0.22.0"
+ipykernel = "^6.25.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+addopts = "--verbose"
+filterwarnings = ["ignore::UserWarning"]
+pythonpath = [
+  ".", "./airflow", "./airflow/dags/",
+]
+
+[tool.coverage.report]
+omit = ["test*", "*/test*", "*/__init__.py", "*/__main__.py"]
+fail_under = 6.0
+show_missing = true
+skip_covered = true
+
+[tool.isort]
+atomic = true
+profile = "black"
+
+[tool.poe.tasks]
+pre-commit_install = "pre-commit install"
