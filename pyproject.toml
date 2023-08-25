@@ -44,5 +44,28 @@ skip_covered = true
 atomic = true
 profile = "black"
 
+[tool.poe.tasks.setup-project]
+shell="""
+  pre-commit install && pre-commit run --all
+  cd airflow && airflowctl build && cd ..
+"""
+
+[tool.poe.tasks.docker-build]
+shell = """
+  export PROJECT=$(poetry version | awk {'print $1'})-$(poetry version | awk {'print $2'})
+  poetry export -f requirements.txt --output poetry-requirements.txt --without-hashes
+  docker build -t $PROJECT:latest .
+"""
+
+[tool.poe.tasks.docker-compose-up]
+shell = """
+  export AIRFLOW_UID=$(id -u)
+  poetry export -f requirements.txt --output poetry-requirements.txt --without-hashes
+  docker-compose up --build
+  docker-compose down
+"""
+
+
 [tool.poe.tasks]
-pre-commit_install = "pre-commit install"
+docker-run = "docker run -it --rm $(poetry version | awk {'print $1'})-$(poetry version | awk {'print $2'}):latest"
+
